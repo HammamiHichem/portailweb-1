@@ -180,7 +180,7 @@ function App() {
   const [message, setMessage] = useState("");
   const [prediction, setPrediction] = useState(null);
   const [vueListe, setVueListe] = useState(false);
-  const [vueReclamations, setVueReclamations] = useState(false); // NOUVEL ÉTAT POUR LA VUE RÉCLAMATIONS
+  const [vueReclamations, setVueReclamations] = useState(false);
   const [tousLesClients, setTousLesClients] = useState([]);
   const [filtreStatut, setFiltreStatut] = useState("Tous");
   const [showAddModal, setShowAddModal] = useState(false);
@@ -324,7 +324,7 @@ function App() {
       setTousLesClients(res.data);
       setFiltreStatut(statut);
       setVueListe(true);
-      setVueReclamations(false); // Fermer les réclamations si on ouvre la liste
+      setVueReclamations(false);
       setClient(null);
     } catch {
       alert("Erreur liste.");
@@ -371,57 +371,103 @@ function App() {
 
   if (!token) {
     return (
-      <div className="auth-wrapper">
+      <div
+        className="auth-wrapper"
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          minHeight: "100vh",
+          backgroundColor: "#f4f4f4",
+        }}
+      >
+        {/* Conteneur principal de l'authentification */}
         <div
-          className="login-selector"
+          className="auth-container"
           style={{
-            marginBottom: "20px",
-            display: "flex",
-            gap: "10px",
-            justifyContent: "center",
+            backgroundColor: "#fff",
+            padding: "30px",
+            borderRadius: "16px",
+            boxShadow: "0 10px 25px rgba(0,0,0,0.1)",
+            width: "100%",
+            maxWidth: "400px",
           }}
         >
-          <button
-            className={`mode-btn ${loginMode === "agent" ? "active" : ""}`}
-            onClick={() => setLoginMode("agent")}
+          {/* SÉLECTEUR DE MODE */}
+          <div
+            className="login-selector"
             style={{
-              padding: "10px 20px",
-              borderRadius: "20px",
-              border: "none",
-              cursor: "pointer",
-              background: loginMode === "agent" ? "#ed1c24" : "#ddd",
-              color: loginMode === "agent" ? "white" : "black",
+              marginBottom: "30px",
+              display: "flex",
+              backgroundColor: "#eee",
+              padding: "5px",
+              borderRadius: "30px",
+              gap: "5px",
             }}
           >
-            Accès Agent
-          </button>
-          <button
-            className={`mode-btn ${loginMode === "client" ? "active" : ""}`}
-            onClick={() => setLoginMode("client")}
-            style={{
-              padding: "10px 20px",
-              borderRadius: "20px",
-              border: "none",
-              cursor: "pointer",
-              background: loginMode === "client" ? "#ed1c24" : "#ddd",
-              color: loginMode === "client" ? "white" : "black",
-            }}
-          >
-            Espace Client
-          </button>
-        </div>
-        {loginMode === "agent" ? (
-          <div className="auth-container">
-            <h2 className="auth-title">
-              Portail Agent <span className="ooredoo-color">Ooredoo</span>
-            </h2>
-            <Login setToken={setToken} />
-            <hr className="auth-hr" />
-            <Register />
+            <button
+              className={`mode-btn ${loginMode === "agent" ? "active" : ""}`}
+              onClick={() => setLoginMode("agent")}
+              style={{
+                flex: 1,
+                padding: "10px",
+                borderRadius: "25px",
+                border: "none",
+                cursor: "pointer",
+                transition: "0.3s",
+                background: loginMode === "agent" ? "#ed1c24" : "transparent",
+                color: loginMode === "agent" ? "white" : "#555",
+                fontWeight: "bold",
+              }}
+            >
+              Accès Agent
+            </button>
+            <button
+              className={`mode-btn ${loginMode === "client" ? "active" : ""}`}
+              onClick={() => setLoginMode("client")}
+              style={{
+                flex: 1,
+                padding: "10px",
+                borderRadius: "25px",
+                border: "none",
+                cursor: "pointer",
+                transition: "0.3s",
+                background: loginMode === "client" ? "#ed1c24" : "transparent",
+                color: loginMode === "client" ? "white" : "#555",
+                fontWeight: "bold",
+              }}
+            >
+              Espace Client
+            </button>
           </div>
-        ) : (
-          <LoginClient setToken={setToken} />
-        )}
+
+          {/* AFFICHAGE CONDITIONNEL SELON LE MODE */}
+          {loginMode === "agent" ? (
+            <div className="animate-fade-in">
+              <h2
+                className="auth-title"
+                style={{ textAlign: "center", marginBottom: "20px" }}
+              >
+                Portail Agent <span className="ooredoo-color">Ooredoo</span>
+              </h2>
+              <Login setToken={setToken} />
+              <hr
+                className="auth-hr"
+                style={{
+                  margin: "20px 0",
+                  border: "0",
+                  borderTop: "1px solid #eee",
+                }}
+              />
+              <Register />
+            </div>
+          ) : (
+            <div className="animate-fade-in">
+              <LoginClient setToken={setToken} />
+            </div>
+          )}
+        </div>
       </div>
     );
   }
@@ -448,7 +494,6 @@ function App() {
           className="nav-actions"
           style={{ display: "flex", alignItems: "center", gap: "15px" }}
         >
-          {/* On passe la fonction pour changer l'état au lieu de naviguer par URL */}
           <NotificationBell
             onOpenReclamations={() => {
               setVueReclamations(true);
@@ -706,4 +751,5 @@ function App() {
     </div>
   );
 }
+
 export default App;
